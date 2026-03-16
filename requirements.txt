@@ -1,0 +1,8 @@
+fastapi
+uvicorn
+tensorflow
+sentence-transformers
+scikit-learn
+numpy
+joblib
+pydantic
