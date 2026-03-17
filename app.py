@@ -1,19 +1,21 @@
 from fastapi import FastAPI
+from fastapi.staticfiles import StaticFiles
 from fastapi.responses import FileResponse
 from pydantic import BaseModel
 from model_utils import predict_match
 
 app = FastAPI()
 
+# Mount static folder
+app.mount("/static", StaticFiles(directory="static"), name="static")
+
 class InputData(BaseModel):
     resume: str
     job_description: str
 
-
 @app.get("/")
 def home():
     return FileResponse("static/index.html")
-
 
 @app.post("/predict")
 def predict(data: InputData):
