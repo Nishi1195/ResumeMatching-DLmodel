@@ -1,3 +1,13 @@
+---
+title: Resume Matcher Model
+emoji: 🐨
+colorFrom: indigo
+colorTo: yellow
+sdk: docker
+pinned: false
+license: mit
+---
+
 # 📄 Resume Matcher — AI-Powered Resume Screening
 
 > An AI-powered resume screening tool that uses **Sentence-BERT embeddings** and a **Deep Learning classifier** to predict how well a resume matches a given job description — served through a sleek, premium dark-mode web interface.

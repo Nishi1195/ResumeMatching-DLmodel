@@ -1,6 +1,6 @@
 fastapi
-uvicorn
-tensorflow
+uvicorn[standard]
+tensorflow-cpu
 sentence-transformers
 scikit-learn
 numpy
