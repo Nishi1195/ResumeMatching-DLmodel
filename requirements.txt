@@ -1,9 +1,7 @@
-fastapi
-uvicorn[standard]
-tensorflow-cpu
+flask
+tensorflow==2.20.0
 sentence-transformers
 scikit-learn
 numpy
 joblib
-pydantic
 pandas

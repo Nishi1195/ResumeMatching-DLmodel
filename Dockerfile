@@ -1,47 +1,27 @@
-# ── Base image ──────────────────────────────────────────────────────────────
-# Use an official Python slim image to keep the container lightweight
-FROM python:3.10-slim
+FROM python:3.11-slim
 
-# ── Metadata ─────────────────────────────────────────────────────────────────
-LABEL maintainer="Nishi"
-LABEL description="ApplySmart - AI-powered Resume Matcher (FastAPI + TensorFlow)"
+WORKDIR /app
 
-# ── System dependencies ───────────────────────────────────────────────────────
-# libgomp1 is required by LightGBM / scikit-learn native libs
+# System dependency (needed for sklearn / numpy)
 RUN apt-get update && apt-get install -y --no-install-recommends \
     libgomp1 \
     && rm -rf /var/lib/apt/lists/*
 
-# ── Working directory ─────────────────────────────────────────────────────────
-WORKDIR /app
-
-# ── Install Python dependencies ───────────────────────────────────────────────
-# Copy requirements first to leverage Docker layer caching
+# Copy requirements first (for caching)
 COPY requirements.txt .
 
-# Upgrade pip, then install deps
-# tensorflow-cpu keeps the image smaller; use 'tensorflow' if GPU is needed
+# Install Python dependencies
 RUN pip install --no-cache-dir --upgrade pip \
-    && pip install --no-cache-dir \
-        fastapi \
-        "uvicorn[standard]" \
-        tensorflow-cpu \
-        sentence-transformers \
-        scikit-learn \
-        numpy \
-        joblib \
-        pydantic \
-        pandas
+    && pip install --no-cache-dir -r requirements.txt
 
-# ── Copy application files ────────────────────────────────────────────────────
-COPY app.py .
-COPY model_utils.py .
-COPY models/ ./models/
-COPY static/ ./static/
+# Copy project files
+COPY . .
 
-# ── Hugging Face Spaces port ──────────────────────────────────────────────────
-# HF Spaces expects the app to listen on port 7860
+# Pre-download SBERT model (VERY IMPORTANT)
+RUN python -c "from sentence_transformers import SentenceTransformer; SentenceTransformer('all-MiniLM-L6-v2')"
+
+# Hugging Face port
 EXPOSE 7860
 
-# ── Start the server ──────────────────────────────────────────────────────────
-CMD ["uvicorn", "app:app", "--host", "0.0.0.0", "--port", "7860"]
+# Run Flask app
+CMD ["python", "app.py"]

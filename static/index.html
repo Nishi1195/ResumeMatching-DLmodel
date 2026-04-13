@@ -195,6 +195,7 @@
             line-height: 1.1;
             letter-spacing: 0.02em;
             background: linear-gradient(to right, #FFFFFF, #A78BFA, #06B6D4);
+            background-clip: text;
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
             text-shadow: 0px 4px 20px rgba(139, 92, 246, 0.3);
@@ -686,7 +687,7 @@
 
     <footer>
         <div class="footer-text">
-            Built with <i data-lucide="heart" class="heart-icon" width="18" height="18"></i>  with FastAPI • TensorFlow • NLP
+            Built with <i data-lucide="heart" class="heart-icon" width="18" height="18"></i>  with Flask • TensorFlow • NLP
         </div>
         <a href="https://github.com/Nishi1195/ResumeMatching-DLmodel" target="_blank" class="github-link" aria-label="GitHub Profile">
             <i data-lucide="github" width="24" height="24"></i>
@@ -725,7 +726,7 @@
             jobGroup.classList.remove('has-error');
         };
 
-        // --- Main Analyze Logic ---
+        // 🚀 REAL API CALL (FIXED)
         const analyzeMatch = async () => {
             const resume = resumeInput.value.trim();
             const jobDesc = jobInput.value.trim();
@@ -737,33 +738,35 @@
             if (!jobDesc) { jobGroup.classList.add('has-error'); hasError = true; }
             if (hasError) return;
 
-            // UI State Change
             results.style.display = 'none';
             loader.style.display = 'flex';
             analyzeBtn.disabled = true;
             analyzeBtn.style.opacity = '0.7';
 
-            // Auto-scroll to loader
             loader.scrollIntoView({ behavior: 'smooth', block: 'center' });
 
             try {
-                // Mock API Call (1.8s delay)
-                await new Promise(resolve => setTimeout(resolve, 1800));
-                
-                const lengthRatio = Math.min(resume.length, jobDesc.length) / Math.max(resume.length, jobDesc.length) || 0;
-                const baseScore = 0.5 + (lengthRatio * 0.4); 
-                const noise = (Math.random() * 0.1) - 0.05;
-                const score = Math.max(0, Math.min(0.999, baseScore + noise));
-                
-                const data = {
-                    match_probability: score,
-                    verdict: score >= 0.75 ? "Accepted" : "Rejected"
-                };
+                const response = await fetch("/predict", {
+                    method: "POST",
+                    headers: {
+                        "Content-Type": "application/json"
+                    },
+                    body: JSON.stringify({
+                        resume: resume,
+                        job_description: jobDesc
+                    })
+                });
+
+                if (!response.ok) {
+                    throw new Error("Server error");
+                }
+
+                const data = await response.json();
 
                 updateResultsUI(data);
-                
+
             } catch (error) {
-                alert("An error occurred while analyzing.");
+                alert("⚠️ Failed to connect to backend. Please try again.");
             } finally {
                 loader.style.display = 'none';
                 analyzeBtn.disabled = false;
@@ -771,9 +774,10 @@
             }
         };
 
+        // UI Update
         const updateResultsUI = (data) => {
             results.style.display = 'block';
-            
+
             const isAccepted = data.verdict === 'Accepted';
             const color = isAccepted ? 'var(--success)' : 'var(--danger)';
             const icon = isAccepted ? 'check-circle-2' : 'x-octagon';
@@ -783,24 +787,22 @@
 
             scoreValue.textContent = "0.000";
             scoreValue.style.color = color;
-            
-            let start = 0;
-            const end = data.match_probability;
+
+            let startTime = performance.now();
             const duration = 1500;
-            const startTime = performance.now();
+            const end = data.match_probability;
 
             const animateScore = (currentTime) => {
-                const elapsed = currentTime - startTime;
-                const progress = Math.min(elapsed / duration, 1);
+                const progress = Math.min((currentTime - startTime) / duration, 1);
                 const easeOut = 1 - Math.pow(1 - progress, 4);
-                
                 scoreValue.textContent = (end * easeOut).toFixed(3);
                 if (progress < 1) requestAnimationFrame(animateScore);
             };
+
             requestAnimationFrame(animateScore);
 
             setTimeout(() => {
-                const circumference = 628; 
+                const circumference = 628;
                 progressCircle.style.strokeDashoffset = circumference - (end * circumference);
             }, 100);
 
@@ -810,24 +812,24 @@
             `;
             lucide.createIcons();
 
-            // --- Perfect Auto-Scroll to Results ---
             setTimeout(() => {
-                const yOffset = -50; 
-                const element = document.getElementById('results');
-                const y = element.getBoundingClientRect().top + window.scrollY + yOffset;
+                const y = results.getBoundingClientRect().top + window.scrollY - 50;
                 window.scrollTo({ top: y, behavior: 'smooth' });
             }, 150);
         };
 
+        // Events
         analyzeBtn.addEventListener('click', analyzeMatch);
-        
+
         clearBtn.addEventListener('click', () => {
-            resumeInput.value = ''; jobInput.value = '';
-            updateCount(resumeInput, resumeCount); updateCount(jobInput, jobCount);
+            resumeInput.value = '';
+            jobInput.value = '';
+            updateCount(resumeInput, resumeCount);
+            updateCount(jobInput, jobCount);
             results.style.display = 'none';
             clearErrors();
             progressCircle.style.strokeDashoffset = 628;
-            window.scrollTo({ top: 0, behavior: 'smooth' }); // Scroll back to top
+            window.scrollTo({ top: 0, behavior: 'smooth' });
         });
 
         document.addEventListener('keydown', (e) => {
@@ -837,6 +839,6 @@
         resumeInput.addEventListener('input', () => resumeGroup.classList.remove('has-error'));
         jobInput.addEventListener('input', () => jobGroup.classList.remove('has-error'));
 
-    </script>
+</script>
 </body>
 </html>

@@ -4,10 +4,10 @@ import joblib
 from sentence_transformers import SentenceTransformer
 from sklearn.metrics.pairwise import cosine_similarity
 
-model = tf.keras.models.load_model("models/resume_match_model.h5")
+model = tf.keras.models.load_model("models/new_model.h5", compile=False)
 scaler = joblib.load("models/scaler.pkl")
 
-embedding_model = SentenceTransformer("all-MiniLM-L6-v2")
+embedding_model = SentenceTransformer("all-MiniLM-L6-v2", device="cpu")
 
 
 def predict_match(resume, jd):
