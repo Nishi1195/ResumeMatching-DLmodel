@@ -1,39 +1,58 @@
-# 📄 Resume Matcher — Deep Learning Model
+# 📄 Resume Matcher — AI-Powered Resume Screening
 
-> An AI-powered resume screening system that uses **Sentence Embeddings** and a **Deep Learning classifier** to predict how well a resume matches a given job description.
+> An AI-powered resume screening tool that uses **Sentence-BERT embeddings** and a **Deep Learning classifier** to predict how well a resume matches a given job description — served through a sleek, premium dark-mode web interface.
 
-[![Python](https://img.shields.io/badge/Python-3.10-blue?logo=python)](https://www.python.org/)
-[![TensorFlow](https://img.shields.io/badge/TensorFlow-2.x-orange?logo=tensorflow)](https://www.tensorflow.org/)
-[![FastAPI](https://img.shields.io/badge/FastAPI-0.x-green?logo=fastapi)](https://fastapi.tiangolo.com/)
-[![Render](https://img.shields.io/badge/Deployed%20on-Render-purple?logo=render)](https://render.com/)
+[![Python](https://img.shields.io/badge/Python-3.10+-blue?logo=python&logoColor=white)](https://www.python.org/)
+[![TensorFlow](https://img.shields.io/badge/TensorFlow-2.x-orange?logo=tensorflow&logoColor=white)](https://www.tensorflow.org/)
+[![FastAPI](https://img.shields.io/badge/FastAPI-0.x-009688?logo=fastapi&logoColor=white)](https://fastapi.tiangolo.com/)
+[![Sentence Transformers](https://img.shields.io/badge/Sentence--Transformers-all--MiniLM--L6--v2-blueviolet)](https://www.sbert.net/)
+[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](LICENSE)
 
 ---
 
 ## 🧠 Project Overview
 
-Resume Matcher is a **Deep Learning-based NLP application** that automates resume screening. Given a raw resume and a job description (JD), the model computes rich semantic features using **Sentence-BERT embeddings** and passes them through a trained **Keras neural network classifier** to predict a match probability and a binary verdict: `Accepted` or `Rejected`.
+**Resume Matcher** is a full-stack AI application that automates resume screening. Given a plain-text resume and a job description, the system:
 
-This project focuses entirely on the **AI/ML pipeline**, from feature engineering to model inference, served through a lightweight **FastAPI** backend.
+1. Encodes both texts into semantic **384-dimensional Sentence-BERT vectors**
+2. Engineers a rich **1537-dimensional feature vector** from those embeddings
+3. Passes the features through a trained **Keras DNN classifier**
+4. Returns a **match probability score** (0.0 → 1.0) and a binary verdict: `Accepted` or `Rejected`
+
+The result is displayed in a fully animated, responsive dark-mode web interface with a real-time circular progress gauge.
 
 ---
 
-## 🚀 Demo
+## ✨ Features
 
-Paste your resume text and a job description into the web UI, click **"Check Match"**, and instantly get:
+- 🔮 **AI Match Scoring** — Semantic similarity beyond keyword matching, powered by Sentence-BERT
+- 🎯 **Binary Verdict** — Clear `Accepted` / `Rejected` decision at a 0.5 probability threshold
+- 📊 **Animated Score Gauge** — Circular SVG progress ring animates to your match score
+- ✍️ **Live Character Counter** — Tracks input length for both resume and job description fields
+- ⌨️ **Keyboard Shortcut** — `Ctrl + Enter` triggers analysis instantly
+- ✅ **Inline Validation** — Animated error states if fields are left empty
+- 📱 **Fully Responsive** — Adapts from desktop to mobile with a stacked layout
+- 🌊 **Liquid Animated Background** — Fluid blob animations with `mix-blend-mode: screen`
 
-- ✅ A **match probability score** (0.0 → 1.0)
-- ✅ A binary **verdict**: `Accepted` or `Rejected`
+---
+
+## 🖥️ UI Preview
+
+The web interface features:
+- A deep **dark background** (`#05050A`) with animated purple/blue/cyan gradient blobs
+- A **glassmorphism card** (`backdrop-filter: blur(24px)`) containing side-by-side text areas
+- A **result card** that reveals with a `bounceIn` animation, color-coded green (Accepted) or red (Rejected)
+- **Righteous** display font and **Urbanist** body font (Google Fonts)
+- Lucide icons throughout the interface
 
 ---
 
 ## 🏗️ Deep Learning Pipeline
 
-The core of this project is a multi-stage feature engineering + neural network pipeline:
-
 ```
 ┌───────────────────────────────────────────────────────────────────────┐
-│                        INPUT                                          │
-│          Resume Text                   Job Description Text           │
+│                              INPUT                                    │
+│         Resume Text                    Job Description Text           │
 └───────────────┬───────────────────────────────────┬───────────────────┘
                 │                                   │
                 ▼                                   ▼
@@ -48,7 +67,7 @@ The core of this project is a multi-stage feature engineering + neural network p
                               │
                               ▼
 ┌──────────────────────────────────────────────────────────────────────┐
-│                  FEATURE ENGINEERING                                 │
+│                     FEATURE ENGINEERING                              │
 │                                                                      │
 │  1. resume_emb         → [384-dim]   Raw resume embedding            │
 │  2. jd_emb             → [384-dim]   Raw JD embedding                │
@@ -61,7 +80,7 @@ The core of this project is a multi-stage feature engineering + neural network p
                                     │
                                     ▼
 ┌──────────────────────────────────────────────────────────────────────┐
-│                     STANDARD SCALER                                  │
+│                      STANDARD SCALER                                 │
 │         Normalizes feature vector using pre-fitted scaler.pkl        │
 │         Scaled Feature Vector: [1537-dim]                            │
 └───────────────────────────────────┬──────────────────────────────────┘
@@ -78,7 +97,7 @@ The core of this project is a multi-stage feature engineering + neural network p
                                     │
                                     ▼
 ┌──────────────────────────────────────────────────────────────────────┐
-│                         OUTPUT                                       │
+│                            OUTPUT                                    │
 │                                                                      │
 │   match_probability : float  (e.g. 0.873)                            │
 │   verdict           : str    ("Accepted" if prob > 0.5 else          │
@@ -86,36 +105,36 @@ The core of this project is a multi-stage feature engineering + neural network p
 └──────────────────────────────────────────────────────────────────────┘
 ```
 
-### Pipeline Steps Explained
+### Pipeline Steps
 
 | Step | Component | Detail |
 |------|-----------|--------|
-| **1. Embedding** | `sentence-transformers` — `all-MiniLM-L6-v2` | Converts raw text into dense 384-dimensional semantic vectors. Captures contextual meaning far beyond keyword matching. |
-| **2. Feature Engineering** | `numpy` + `sklearn` | Derives 4 complementary feature signals: raw embeddings, absolute difference, element-wise product, and cosine similarity. Provides the model with rich, multi-perspective input. |
-| **3. Scaling** | `StandardScaler` (scikit-learn) | Pre-fitted scaler (`scaler.pkl`) normalizes features to zero mean and unit variance for stable gradient flow. |
-| **4. Classification** | TensorFlow/Keras DNN (`resume_match_model.h5`) | Feed-forward neural network with a sigmoid output for binary classification. Outputs a match probability. |
-| **5. Verdict** | Threshold at 0.5 | Probability > 0.5 → **Accepted**, else → **Rejected**. |
+| **1. Embedding** | `sentence-transformers` — `all-MiniLM-L6-v2` | Converts raw text into dense 384-dim semantic vectors. Captures contextual meaning far beyond keyword matching. |
+| **2. Feature Engineering** | `numpy` + `sklearn` | Derives 4 complementary feature signals: raw embeddings, absolute difference, element-wise product, and cosine similarity. |
+| **3. Scaling** | `StandardScaler` (scikit-learn) | Pre-fitted `scaler.pkl` normalizes the 1537-dim vector to zero mean and unit variance for stable inference. |
+| **4. Classification** | TensorFlow/Keras DNN (`resume_match_model.h5`) | Feed-forward neural network with a sigmoid output for binary classification. |
+| **5. Verdict** | Threshold at 0.5 | Probability ≥ 0.5 → **Accepted**, else → **Rejected**. |
 
 ---
 
 ## 🗂️ Project Structure
 
 ```
-Resume-matcher/
+Resume-matcher-model/
 │
-├── app.py                  # FastAPI server — REST API + static file serving
-├── model_utils.py          # Core ML pipeline: embedding → features → prediction
+├── app.py                      # FastAPI server — REST API + static file serving
+├── model_utils.py              # Core ML pipeline: embedding → features → prediction
 │
 ├── models/
-│   ├── resume_match_model.h5   # Trained Keras deep learning model (~11 MB)
+│   ├── resume_match_model.h5   # Trained Keras deep learning model
 │   └── scaler.pkl              # Pre-fitted StandardScaler
 │
 ├── static/
-│   └── index.html          # Minimal frontend UI (HTML + JS)
+│   └── index.html              # Full-featured single-page frontend (HTML + CSS + JS)
 │
-├── requirements.txt        # Python dependencies
-├── runtime.txt             # Python version for deployment
-└── render.yaml             # Render.com deployment configuration
+├── applysmartmodel.ipynb       # Model training & evaluation notebook
+├── requirements.txt            # Python dependencies
+└── .gitignore
 ```
 
 ---
@@ -128,8 +147,9 @@ Resume-matcher/
 | **NLP Embeddings** | `sentence-transformers` (`all-MiniLM-L6-v2`) |
 | **Feature Engineering** | NumPy, Scikit-learn |
 | **API Backend** | FastAPI + Uvicorn |
-| **Frontend** | HTML + Vanilla JS |
-| **Deployment** | Render.com |
+| **Frontend** | HTML5 + Vanilla CSS + Vanilla JS |
+| **Icons** | Lucide Icons (CDN) |
+| **Fonts** | Google Fonts — Righteous, Urbanist |
 
 ---
 
@@ -162,15 +182,21 @@ pip install -r requirements.txt
 uvicorn app:app --reload
 ```
 
-The app will be available at `http://127.0.0.1:8000`
+The app will be available at **`http://127.0.0.1:8000`**
 
 ---
 
 ## 🌐 API Reference
 
+### `GET /`
+
+Serves the web UI (`static/index.html`).
+
+---
+
 ### `POST /predict`
 
-Predicts resume–job description match.
+Runs the full ML pipeline and returns a match score.
 
 **Request Body (JSON):**
 
@@ -190,6 +216,13 @@ Predicts resume–job description match.
 }
 ```
 
+| Field | Type | Description |
+|-------|------|-------------|
+| `match_probability` | `float` | Score between 0.0 and 1.0 |
+| `verdict` | `string` | `"Accepted"` if prob ≥ 0.5, else `"Rejected"` |
+
+---
+
 ## 📦 Dependencies
 
 ```
@@ -201,6 +234,7 @@ scikit-learn
 numpy
 joblib
 pydantic
+pandas
 ```
 
 ---
@@ -217,4 +251,4 @@ This project is open-source and available under the [MIT License](LICENSE).
 
 ---
 
-<p align="center">Built with ❤️ using TensorFlow, Sentence-BERT, and FastAPI</p>
+<p align="center">Built with ❤️ using TensorFlow · Sentence-BERT · FastAPI · Vanilla JS</p>
