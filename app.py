@@ -1,12 +1,44 @@
-from flask import Flask, request, jsonify, send_from_directory
+# from flask import Flask, request, jsonify, send_from_directory
+# from model_utils import predict_match
+
+# app = Flask(__name__, static_folder="static")
+
+# # Serve frontend
+# @app.route("/")
+# def home():
+#     return send_from_directory("static", "index.html")
+
+# # Prediction API
+# @app.route("/predict", methods=["POST"])
+# def predict():
+#     data = request.get_json()
+
+#     resume = data.get("resume", "")
+#     job_description = data.get("job_description", "")
+
+#     prob, verdict = predict_match(resume, job_description)
+
+#     return jsonify({
+#         "match_probability": float(prob),
+#         "verdict": verdict
+#     })
+
+# # Run (for Hugging Face)
+# if __name__ == "__main__":
+#     app.run(host="0.0.0.0", port=7860)
+
+from flask import Flask, request, jsonify
+from flask_cors import CORS
 from model_utils import predict_match
 
-app = Flask(__name__, static_folder="static")
+app = Flask(__name__)
+CORS(app)  # 🔥 VERY IMPORTANT
 
-# Serve frontend
+
+# ✅ ADD THIS
 @app.route("/")
 def home():
-    return send_from_directory("static", "index.html")
+    return "Backend is running 🚀"
 
 # Prediction API
 @app.route("/predict", methods=["POST"])
@@ -23,6 +55,6 @@ def predict():
         "verdict": verdict
     })
 
-# Run (for Hugging Face)
+# Run server
 if __name__ == "__main__":
-    app.run(host="0.0.0.0", port=7860)
+    app.run(host="0.0.0.0", port=7860, debug=True)
