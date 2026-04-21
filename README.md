@@ -14,7 +14,7 @@ license: mit
 
 [![Python](https://img.shields.io/badge/Python-3.10+-blue?logo=python&logoColor=white)](https://www.python.org/)
 [![TensorFlow](https://img.shields.io/badge/TensorFlow-2.x-orange?logo=tensorflow&logoColor=white)](https://www.tensorflow.org/)
-[![FastAPI](https://img.shields.io/badge/FastAPI-0.x-009688?logo=fastapi&logoColor=white)](https://fastapi.tiangolo.com/)
+[![Flask](https://img.shields.io/badge/Flask-3.x-lightgrey?logo=flask&logoColor=white)](https://flask.palletsprojects.com/)
 [![Sentence Transformers](https://img.shields.io/badge/Sentence--Transformers-all--MiniLM--L6--v2-blueviolet)](https://www.sbert.net/)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](LICENSE)
 
@@ -132,7 +132,7 @@ The web interface features:
 ```
 Resume-matcher-model/
 │
-├── app.py                      # FastAPI server — REST API + static file serving
+├── app.py                      # Flask server — REST API + static file serving
 ├── model_utils.py              # Core ML pipeline: embedding → features → prediction
 │
 ├── models/
@@ -156,7 +156,7 @@ Resume-matcher-model/
 | **Deep Learning** | TensorFlow / Keras |
 | **NLP Embeddings** | `sentence-transformers` (`all-MiniLM-L6-v2`) |
 | **Feature Engineering** | NumPy, Scikit-learn |
-| **API Backend** | FastAPI + Uvicorn |
+| **API Backend** | Flask |
 | **Frontend** | HTML5 + Vanilla CSS + Vanilla JS |
 | **Icons** | Lucide Icons (CDN) |
 | **Fonts** | Google Fonts — Righteous, Urbanist |
@@ -189,10 +189,10 @@ pip install -r requirements.txt
 ### 4. Run the server
 
 ```bash
-uvicorn app:app --reload
+python app.py
 ```
 
-The app will be available at **`http://127.0.0.1:8000`**
+The app will be available at **`http://127.0.0.1:7860`**
 
 ---
 
@@ -236,14 +236,13 @@ Runs the full ML pipeline and returns a match score.
 ## 📦 Dependencies
 
 ```
-fastapi
-uvicorn
+flask
+flask-cors
 tensorflow
 sentence-transformers
 scikit-learn
 numpy
 joblib
-pydantic
 pandas
 ```
 
@@ -261,4 +260,4 @@ This project is open-source and available under the [MIT License](LICENSE).
 
 ---
 
-<p align="center">Built with ❤️ using TensorFlow · Sentence-BERT · FastAPI · Vanilla JS</p>
+<p align="center">Built with ❤️ using TensorFlow · Sentence-BERT · Flask · Vanilla JS</p>
