@@ -55,41 +55,41 @@ const ImpactSection: React.FC = () => {
 
       <div className="container cta-content" style={{ opacity: 1 }} data-v="3">
         <div style={{ marginBottom: "24px" }}>
-           <span style={{ 
-             fontSize: "14px", 
-             color: "var(--accent-primary)", 
-             fontWeight: "800", 
-             letterSpacing: "0.4em", 
-             textTransform: "uppercase" 
-           }}>
-             Start Matching
-           </span>
+          <span style={{
+            fontSize: "14px",
+            color: "var(--accent-primary)",
+            fontWeight: "800",
+            letterSpacing: "0.4em",
+            textTransform: "uppercase"
+          }}>
+            Start Matching
+          </span>
         </div>
 
-        <h2 style={{ 
-          fontSize: "clamp(2.5rem, 7vw, 4.5rem)", 
-          marginBottom: "24px", 
+        <h2 style={{
+          fontSize: "clamp(2.5rem, 7vw, 4.5rem)",
+          marginBottom: "24px",
           lineHeight: 1,
           fontFamily: "var(--font-display)",
           maxWidth: "800px",
           margin: "0 auto 24px"
         }}>
-          Ready to find your <br /> 
+          Ready to find your <br />
           <span className="accent-gradient" style={{ fontSize: "1.1em" }}>next standard?</span>
         </h2>
 
-        <p style={{ 
-          color: "var(--text-secondary)", 
-          fontSize: "1.25rem", 
-          maxWidth: "580px", 
-          margin: "0 auto 64px", 
+        <p style={{
+          color: "var(--text-secondary)",
+          fontSize: "1.25rem",
+          maxWidth: "580px",
+          margin: "0 auto 64px",
           lineHeight: "1.7",
           fontFamily: "var(--font-body)",
           fontWeight: "400"
         }}>
           Join the next generation of HR. Use Sentence-BERT to identify top talent with 99.9% semantic accuracy.
         </p>
-        
+
         <Link
           to="/app"
           style={{
@@ -125,8 +125,8 @@ const ImpactSection: React.FC = () => {
         >
           Get Started
           <svg style={{ marginLeft: "12px", width: "16px", height: "16px" }} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
-             <line x1="5" y1="12" x2="19" y2="12"></line>
-             <polyline points="12 5 19 12 12 19"></polyline>
+            <line x1="5" y1="12" x2="19" y2="12"></line>
+            <polyline points="12 5 19 12 12 19"></polyline>
           </svg>
         </Link>
       </div>

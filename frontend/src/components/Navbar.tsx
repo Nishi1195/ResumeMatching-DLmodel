@@ -11,7 +11,7 @@ const Navbar: React.FC = () => {
   useLayoutEffect(() => {
     const ctx = gsap.context(() => {
       // Smart Navbar: Hide on scroll down, Show on scroll up
-      const showAnim = gsap.from(navRef.current, { 
+      const showAnim = gsap.from(navRef.current, {
         yPercent: -100,
         paused: true,
         duration: 0.3,

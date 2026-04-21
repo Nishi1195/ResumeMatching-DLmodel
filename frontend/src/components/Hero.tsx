@@ -91,7 +91,7 @@ const Hero: React.FC = () => {
             fontFamily: "var(--font-body)"
           }}
         >
-          Predict match probability using <strong>Sentence-BERT embeddings</strong> and a 
+          Predict match probability using <strong>Sentence-BERT embeddings</strong> and a
           trained <strong>Keras DNN classifier</strong>. Served through a high-performance <strong>Flask</strong> backend.
         </p>
         <div style={{ display: "flex", gap: "20px", justifyContent: "center" }}>
