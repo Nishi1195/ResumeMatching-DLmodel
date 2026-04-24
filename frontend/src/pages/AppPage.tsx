@@ -57,7 +57,7 @@ const AppPage: React.FC = () => {
   useEffect(() => {
     const handleKeyDown = (e: KeyboardEvent) => {
       if ((e.ctrlKey || e.metaKey) && e.key === "Enter") {
-        if (!loading && resume && jobDesc) {
+        if (!loading && canAnalyze) {
           analyze();
         }
       }
@@ -66,8 +66,15 @@ const AppPage: React.FC = () => {
     return () => window.removeEventListener("keydown", handleKeyDown);
   }, [resume, jobDesc, loading]);
 
+  const RESUME_MIN = 300;
+  const JOB_MIN = 50;
+
+  const resumeValid = resume.length >= RESUME_MIN;
+  const jobValid = jobDesc.length >= JOB_MIN;
+  const canAnalyze = resumeValid && jobValid;
+
   const analyze = async () => {
-    if (!resume || !jobDesc) return;
+    if (!canAnalyze) return;
 
     setLoading(true);
     setResult(null);
@@ -120,28 +127,66 @@ const AppPage: React.FC = () => {
               <div className="input-card" style={{ display: "flex", flexDirection: "column", gap: "12px" }}>
                 <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
                   <label style={{ fontSize: "12px", fontWeight: "800", color: "var(--text-secondary)", letterSpacing: "0.1em" }}>RESUME DATA</label>
-                  <span style={{ fontSize: "11px", color: "var(--text-secondary)", opacity: 0.6 }}>{resume.length} characters</span>
+                  <span style={{
+                    fontSize: "11px",
+                    fontWeight: "700",
+                    color: resumeValid ? "#22c55e" : resume.length > 0 ? "#ef4444" : "var(--text-secondary)",
+                    transition: "color 0.3s",
+                  }}>
+                    {resume.length} / {RESUME_MIN} min
+                  </span>
                 </div>
                 <textarea
                   placeholder="Paste plain-text resume content..."
                   value={resume}
                   onChange={(e) => setResume(e.target.value)}
                   className="glass"
-                  style={textAreaStyle}
+                  style={{
+                    ...textAreaStyle,
+                    border: resume.length > 0 && !resumeValid
+                      ? "1px solid rgba(239,68,68,0.6)"
+                      : resumeValid
+                      ? "1px solid rgba(34,197,94,0.5)"
+                      : "1px solid var(--glass-border)",
+                  }}
                 />
+                {resume.length > 0 && !resumeValid && (
+                  <span style={{ fontSize: "11px", color: "#ef4444", marginTop: "-4px" }}>
+                    ⚠ Minimum {RESUME_MIN} characters required — {RESUME_MIN - resume.length} more to go
+                  </span>
+                )}
               </div>
               <div className="input-card" style={{ display: "flex", flexDirection: "column", gap: "12px" }}>
                 <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
                   <label style={{ fontSize: "12px", fontWeight: "800", color: "var(--text-secondary)", letterSpacing: "0.1em" }}>JOB SPECIFICATION</label>
-                  <span style={{ fontSize: "11px", color: "var(--text-secondary)", opacity: 0.6 }}>{jobDesc.length} characters</span>
+                  <span style={{
+                    fontSize: "11px",
+                    fontWeight: "700",
+                    color: jobValid ? "#22c55e" : jobDesc.length > 0 ? "#ef4444" : "var(--text-secondary)",
+                    transition: "color 0.3s",
+                  }}>
+                    {jobDesc.length} / {JOB_MIN} min
+                  </span>
                 </div>
                 <textarea
                   placeholder="Paste job description..."
                   value={jobDesc}
                   onChange={(e) => setJobDesc(e.target.value)}
                   className="glass"
-                  style={textAreaStyle}
+                  style={{
+                    ...textAreaStyle,
+                    border: jobDesc.length > 0 && !jobValid
+                      ? "1px solid rgba(239,68,68,0.6)"
+                      : jobValid
+                      ? "1px solid rgba(34,197,94,0.5)"
+                      : "1px solid var(--glass-border)",
+                  }}
                 />
+                {jobDesc.length > 0 && !jobValid && (
+                  <span style={{ fontSize: "11px", color: "#ef4444", marginTop: "-4px" }}>
+                    ⚠ Minimum {JOB_MIN} characters required — {JOB_MIN - jobDesc.length} more to go
+                  </span>
+                )}
               </div>
             </div>
 
@@ -149,11 +194,11 @@ const AppPage: React.FC = () => {
               <button
                 className="analyze-btn"
                 onClick={analyze}
-                disabled={loading || !resume || !jobDesc}
+                disabled={loading || !canAnalyze}
                 style={{
                   ...buttonStyle,
-                  opacity: (loading || !resume || !jobDesc) ? 0.4 : 1,
-                  cursor: (loading || !resume || !jobDesc) ? "not-allowed" : "pointer",
+                  opacity: (loading || !canAnalyze) ? 0.4 : 1,
+                  cursor: (loading || !canAnalyze) ? "not-allowed" : "pointer",
                 }}
               >
                 {loading ? (
